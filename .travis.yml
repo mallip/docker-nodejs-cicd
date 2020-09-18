@@ -1,6 +1,8 @@
 sudo: required
 services:
     - docker
+branches:
+    only: ["master"]
 
 before_install:
     - docker build -t mallip/react-test -f ./client/Dockerfile.dev ./client
@@ -8,16 +10,16 @@ script:
     - docker run -e CI=true mallip/react-test npm test -- --coverage
 
 after_success:
-    - docker build -t mallip/multi-client ./client
-    - docker build -t mallip/multi-nginx ./nginx
-    - docker build -t mallip/multi-server ./server
-    - docker build -t mallip/multi-worker ./worker
+    - docker build -t mallip/m-client ./client
+    - docker build -t mallip/m-nginx ./nginx
+    - docker build -t mallip/m-server ./server
+    - docker build -t mallip/m-worker ./worker
 
     # Log in to the docker CLI
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
 
     # Take those images and push them to docker hub
-    - docker push mallip/multi-client
-    - docker push mallip/multi-nginx
-    - docker push mallip/multi-server
-    - docker push mallip/multi-worker
+    - docker push mallip/m-client
+    - docker push mallip/m-nginx
+    - docker push mallip/m-server
+    - docker push mallip/m-worker
